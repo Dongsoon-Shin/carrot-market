@@ -6,29 +6,29 @@ import TextArea from "@components/textarea";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
 import { useEffect } from "react";
-import { Product } from "@prisma/client";
 import { useRouter } from "next/router";
+import { Product } from "@prisma/client";
 
-interface UploadProductForm {
+interface UploadProductsForm {
   name: string;
-  price: number;
+  price: string;
   description: string;
 }
 
-interface UploadProductMutation {
+interface UploadProductsMutation {
   ok: boolean;
   product: Product;
 }
 
 const Upload: NextPage = () => {
+  const { register, handleSubmit } = useForm<UploadProductsForm>();
   const router = useRouter();
-  const { register, handleSubmit } = useForm<UploadProductForm>();
-  const [uploadProduct, { loading, data }] =
-    useMutation<UploadProductMutation>("/api/products");
-  const onValid = (data: UploadProductForm) => {
+  const [uploadProduct, { loading, data }] = useMutation("/api/products");
+  const onValid = (data: UploadProductsForm) => {
     if (loading) return;
     uploadProduct(data);
   };
+
   useEffect(() => {
     if (data?.ok) {
       router.replace(`/products/${data.product.id}`);
@@ -75,7 +75,6 @@ const Upload: NextPage = () => {
           register={register("description", { required: true })}
           name="description"
           label="Description"
-          required
         />
         <Button text={loading ? "Loading..." : "Upload item"} />
       </form>

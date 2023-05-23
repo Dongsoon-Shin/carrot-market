@@ -9,12 +9,12 @@ const Live: NextPage = () => {
       <div className=" divide-y-[1px] space-y-4">
         {[1, 1, 1, 1, 1, 1, 1].map((_, i) => (
           <Link key={i} href={`/live/${i}`}>
-            <a className="pt-4 block  px-4">
+            <div className="pt-4 block  px-4">
               <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
               <h1 className="text-2xl mt-2 font-bold text-gray-900">
                 Galaxy S50
               </h1>
-            </a>
+            </div>
           </Link>
         ))}
         <FloatingButton href="/live/create">

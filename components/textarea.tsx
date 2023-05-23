@@ -24,8 +24,8 @@ export default function TextArea({
         </label>
       ) : null}
       <textarea
-        id={name}
         {...register}
+        id={name}
         className="mt-1 shadow-sm w-full focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500 "
         rows={4}
         {...rest}

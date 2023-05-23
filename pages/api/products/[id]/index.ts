@@ -11,6 +11,7 @@ async function handler(
     query: { id },
     session: { user },
   } = req;
+
   const product = await client.product.findUnique({
     where: {
       id: +id.toString(),
@@ -25,11 +26,25 @@ async function handler(
       },
     },
   });
+
+  const isLiked = Boolean(
+    await client.favorits.findFirst({
+      where: {
+        productId: product?.id,
+        userId: user?.id,
+      },
+      select: {
+        id: true,
+      },
+    })
+  );
+
   const terms = product?.name.split(" ").map((word) => ({
     name: {
       contains: word,
     },
   }));
+
   const relatedProducts = await client.product.findMany({
     where: {
       OR: terms,
@@ -40,23 +55,8 @@ async function handler(
       },
     },
   });
-  const isLiked = Boolean(
-    await client.fav.findFirst({
-      where: {
-        productId: product?.id,
-        userId: user?.id,
-      },
-      select: {
-        id: true,
-      },
-    })
-  );
-  res.json({ ok: true, product, isLiked, relatedProducts });
+
+  res.json({ ok: true, product, relatedProducts });
 }
 
-export default withApiSession(
-  withHandler({
-    methods: ["GET"],
-    handler,
-  })
-);
+export default withApiSession(withHandler({ methods: ["GET"], handler }));

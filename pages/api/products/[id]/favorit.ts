@@ -11,20 +11,22 @@ async function handler(
     query: { id },
     session: { user },
   } = req;
-  const alreadyExists = await client.fav.findFirst({
+
+  const alreadyExists = await client.favorits.findFirst({
     where: {
-      productId: +id.toString(),
+      productId: id ? +id : undefined,
       userId: user?.id,
     },
   });
+
   if (alreadyExists) {
-    await client.fav.delete({
+    await client.favorits.delete({
       where: {
         id: alreadyExists.id,
       },
     });
   } else {
-    await client.fav.create({
+    await client.favorits.create({
       data: {
         user: {
           connect: {
@@ -33,7 +35,7 @@ async function handler(
         },
         product: {
           connect: {
-            id: +id.toString(),
+            id: id ? +id : undefined,
           },
         },
       },
@@ -42,9 +44,4 @@ async function handler(
   res.json({ ok: true });
 }
 
-export default withApiSession(
-  withHandler({
-    methods: ["POST"],
-    handler,
-  })
-);
+export default withApiSession(withHandler({ methods: ["POST"], handler }));

@@ -12,7 +12,7 @@ async function handler(
       include: {
         _count: {
           select: {
-            favs: true,
+            favorits: true,
           },
         },
       },
@@ -27,6 +27,7 @@ async function handler(
       body: { name, price, description },
       session: { user },
     } = req;
+
     const product = await client.product.create({
       data: {
         name,
@@ -40,7 +41,8 @@ async function handler(
         },
       },
     });
-    res.json({
+
+    return res.json({
       ok: true,
       product,
     });
@@ -48,8 +50,5 @@ async function handler(
 }
 
 export default withApiSession(
-  withHandler({
-    methods: ["GET", "POST"],
-    handler,
-  })
+  withHandler({ methods: ["GET", "POST"], handler })
 );
