@@ -56,7 +56,7 @@ async function handler(
     },
   });
 
-  res.json({ ok: true, product, relatedProducts });
+  res.json({ ok: true, product, isLiked, relatedProducts });
 }
 
 export default withApiSession(withHandler({ methods: ["GET"], handler }));
